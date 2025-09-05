@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NhatNam</title>
+<style>
+  :root {
+    --bg: #0b0b0e;
+    --panel: rgba(22,22,28,0.72);
+    --panel-solid: #16161c;
+    --border: rgba(255,255,255,0.25);
+    --brand: #ffffff;
+    --brand-2: #cccccc;
+    --radius: 16px;
+    --shadow: 0 0 25px rgba(255,255,255,0.25);
+    --muted: #9a9aa0;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: var(--bg);
+    color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .container {
+    display: flex;
+    width: 90%;
+    max-width: 1200px;
+    background: var(--panel-solid);
+    border-radius: var(--radius);
+    box-shadow: 0 0 40px rgba(0,0,0,0.6);
+    overflow: hidden;
+    border: 2px solid var(--brand);
+    position: relative;
+    z-index: 1;
+  }
+
+  .sidebar {
+    width: 33.33%;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .avatar-gif {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid var(--brand);
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .avatar-gif img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .nav button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: 1px solid transparent;
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+    color: #f0f0f0;
+    cursor: pointer;
+    transition: 0.25s;
+  }
+
+  .nav button:hover,
+  .nav button.active {
+    border-color: var(--brand);
+    background: rgba(255,255,255,0.08);
+    color: var(--brand);
+  }
+
+  .main {
+    width: 66.66%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .toolbar {
+    height: 60px;
+    border-bottom: 1px solid var(--border);
+    background: var(--panel);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+  }
+
+  .toolbar h2 {
+    margin: 0;
+    font-size: 18px;
+    color: var(--brand);
+  }
+
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+  }
+
+  .card h3 {
+    margin: 0 0 10px 0;
+    font-size: 20px;
+    color: var(--brand);
+  }
+
+  .card p {
+    margin: 0 0 15px 0;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .toggle label {
+    font-size: 14px;
+  }
+
+  .toggle input {
+    appearance: none;
+    width: 44px;
+    height: 22px;
+    background: #444;
+    border-radius: 999px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .toggle input::before {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    top: 2px;
+    left: 2px;
+    transition: 0.3s;
+  }
+
+  .toggle input:checked {
+    background: linear-gradient(90deg, var(--brand), var(--brand-2));
+  }
+
+  .toggle input:checked::before {
+    transform: translateX(22px);
+    background: #111;
+  }
+
+  .contact-links a {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--brand);
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
+  }
+
+  .contact-links a:hover {
+    color: var(--brand-2);
+  }
+
+  .footer {
+    height: 40px;
+    border-top: 1px solid var(--border);
+    background: var(--panel);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  #activateMenu {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(135deg, var(--brand), var(--brand-2));
+    color: #FFFFFF
+;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1000;
+  }
+
+  #iosInfo {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.7);
+    color: #FFFFFF
+;
+    z-index: 1001;
+    width: 300px;
+    text-align: center;
+  }
+
+  #iosInfo h3 {
+    color: var(--brand);
+    margin-bottom: 15px;
+  }
+
+  #iosInfo button {
+    margin-top: 20px;
+    padding: 8px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: #FFFFFF
+;
+    cursor: pointer;
+    transition: 0.25s;
+  }
+
+  #iosInfo button:hover {
+    border-color: var(--brand);
+    color: var(--brand);
+  }
+
+  /* Particle canvas styles */
+  #particleCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* không chặn tương tác */
+    z-index: 0;
+  }
+
+  /* đảm bảo container hiển thị trên canvas */
+  .container { z-index: 1; }
+
+  /* giữ overlay elements trên cùng */
+  #activateMenu, #iosInfo { z-index: 1000; }
+
+  /* Responsive small screens: allow scrolling of content */
+  @media (max-height: 700px) {
+    body { align-items: flex-start; padding-top: 20px; height: auto; }
+  }
+
+</style>
+</head>
+<body>
+
+<button id="activateMenu">Activate Config</button>
+
+<div id="iosInfo">
+  <h3>iOS Device Info</h3>
+  <p id="model">Model : </p>
+  <p id="os">iOS Version : </p>
+  <p id="ip">IP Address : </p>
+  <button id="closeInfo">Close</button>
+</div>
+
+<!-- Particle canvas -->
+<canvas id="particleCanvas" aria-hidden="true"></canvas>
+
+<div class="container">
+  <div class="sidebar">
+    <div class="avatar-gif">
+      <img src="https://i.imgur.com/xY0aDqJ.jpeg" alt="GIF Avatar">
+    </div>
+
+    <div class="nav">
+      <button class="active">Contact</button>
+      <button>Optimize</button>
+      <button>Gaming</button>
+      <button>Network</button>
+      <button>Display</button>
+      <button>Assistive</button>
+      <button>Screen</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="toolbar">
+      <h2>Contact Me</h2>
+    </div>
+
+    <div class="content">
+      <div class="card">
+        <h3>Contact Me</h3>
+        <p>Liên hệ qua các kênh dưới đây.</p>
+        <div class="contact-links">
+          <a href="http://zalo.me/84901290310" target="_blank" rel="noopener">Zalo</a>
+          <a href="https://www.tiktok.com/@nhatnamxtweak?_t=ZS-8zTZ856wVk0&_r=1" target="_blank" rel="noopener">TikTok</a>
+          <a href="https://www.facebook.com/share/1BDRVGwkg8/?mibextid=wwXIfr" target="_blank" rel="noopener">Facebook</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Optimal iPhone</h3>
+        <p>Creator.nhatnamtweak</p>
+        <div class="toggle"><label>CPU Turbo</label><input type="checkbox"></div>
+        <div class="toggle"><label>RAM Cleaner</label><input type="checkbox"></div>
+        <div class="toggle"><label>Thermal Control</label><input type="checkbox"></div>
+      </div>
+
+      <div class="card">
+        <h3>Gaming Mode</h3>
+        <p>Creator.nhatnamtweak</p>
+        <div class="toggle"><label>Aim Assist</label><input type="checkbox"></div>
+        <div class="toggle"><label>FPS Unlock</label><input type="checkbox"></div>
+        <div class="toggle"><label>Tâm Ảo</label><input type="checkbox"></div>
+      </div>
+
+      <div class="card">
+        <h3>Network Wifi</h3>
+        <p>Creator.nhatnamtweak</p>
+        <div class="toggle"><label>DNS Boost</label><input type="checkbox"></div>
+        <div class="toggle"><label>VPN Shield</label><input type="checkbox"></div>
+        <div class="toggle"><label>Packet Prioritize</label><input type="checkbox"></div>
+      </div>
+
+      <div class="card">
+        <h3>Smooth Display</h3>
+        <p>Creator.nhatnamtweak</p>
+        <div class="toggle"><label>HDR+ Mode</label><input type="checkbox"></div>
+        <div class="toggle"><label>Touch Boost</label><input type="checkbox"></div>
+        <div class="toggle"><label>Color Enhance</label><input type="checkbox"></div>
+      </div>
+
+      <div class="card">
+        <h3>Assistive Touch</h3>
+        <p>Creator.nhatnamtweak</p>
+        <div class="toggle"><label>Pointer Speed</label><input type="checkbox"></div>
+        <div class="toggle"><label>Haptic Feedback</label><input type="checkbox"></div>
+        <div class="toggle"><label>Swipe Control</label><input type="checkbox"></div>
+      </div>
+
+      <div class="card">
+        <h3>Screen Settings</h3>
+        <p>Creator.nhatnamtweak</p>
+        <div class="toggle"><label>Smooth Touch</label><input type="checkbox"></div>
+        <div class="toggle"><label>Hyper Click</label><input type="checkbox"></div>
+        <div class="toggle"><label>Screen Guard</label><input type="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      © 2025 Copyright : Creator.nhatnamtweak
+    </div>
+  </div>
+</div>
+
+<script>
+  // Nav buttons + cards
+  const navButtons = document.querySelectorAll('.nav button');
+  const cards = document.querySelectorAll('.card');
+  const toolbarTitle = document.querySelector('.toolbar h2');
+
+  cards.forEach((c, idx) => c.style.display = idx === 0 ? 'block' : 'none');
+
+  navButtons.forEach((btn, idx) => {
+    btn.addEventListener('click', () => {
+      navButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      toolbarTitle.textContent = btn.textContent;
+
+      cards.forEach(c => c.style.display = 'none');
+      if (idx < cards.length) cards[idx].style.display = 'block';
+    });
+  });
+
+  // iOS info
+  const activateBtn = document.getElementById('activateMenu');
+  const iosInfo = document.getElementById('iosInfo');
+  const closeBtn = document.getElementById('closeInfo');
+  const modelText = document.getElementById('model');
+  const osText = document.getElementById('os');
+  const ipText = document.getElementById('ip');
+
+  activateBtn.addEventListener('click', () => {
+    const ua = navigator.userAgent;
+    modelText.textContent = "Model: " + (ua.match(/\((.*?)\)/)?.[1] || "Unknown");
+    osText.textContent = "OS Version: " + (ua.match(/OS (\d+_\d+(_\d+)?)/)?.[1]?.replace(/_/g,'.') || "Unknown");
+
+    fetch('https://api.ipify.org?format=json')
+      .then(res => res.json())
+      .then(data => { ipText.textContent = "IP Address: " + data.ip; })
+      .catch(err => { ipText.textContent = "IP Address: Unknown"; });
+
+    iosInfo.style.display = 'block';
+  });
+
+  closeBtn.addEventListener('click', () => {
+    iosInfo.style.display = 'none';
+  });
+
+  /* ---------- Particle (white snow-like) ---------- */
+  const canvas = document.getElementById('particleCanvas');
+  const ctx = canvas.getContext('2d');
+
+  let particles = [];
+  let width = 0;
+  let height = 0;
+  const DPR = window.devicePixelRatio || 1;
+
+  function resizeCanvas() {
+    // set CSS size
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    // set actual pixel size for crisp rendering on high-DPI screens
+    canvas.width = Math.floor(window.innerWidth * DPR);
+    canvas.height = Math.floor(window.innerHeight * DPR);
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0); // scale drawing operations
+    width = window.innerWidth;
+    height = window.innerHeight;
+  }
+
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  class Particle {
+    constructor() { this.reset(true); }
+    reset(initial = false) {
+      this.x = Math.random() * width;
+      // when initial, allow spawn anywhere vertically; otherwise start above view
+      this.y = initial ? Math.random() * height : (Math.random() * -50 - 10);
+      this.size = (Math.random() * 2.2) + 1.2; // smaller, soft snow
+      this.speedY = (Math.random() * 0.9) + 0.6; // slow gentle fall
+      this.speedX = (Math.random() * 0.6) - 0.3; // slight drift
+      this.alpha = (Math.random() * 0.6) + 0.35; // soft transparency
+      this.twist = Math.random() * Math.PI * 2;
+      this.twistSpeed = (Math.random() * 0.02) - 0.01;
+    }
+    update() {
+      this.y += this.speedY;
+      this.x += Math.sin(this.twist) * 0.3 + this.speedX;
+      this.twist += this.twistSpeed;
+      if (this.y - this.size > height + 10 || this.x < -50 || this.x > width + 50) {
+        this.reset(false);
+      }
+    }
+    draw() {
+      ctx.beginPath();
+      // soft circular particle (filled)
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${this.alpha})`;
+      ctx.fill();
+    }
+  }
+
+  function initParticles(count = 120) {
+    particles = [];
+    for (let i = 0; i < count; i++) particles.push(new Particle());
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+    for (let p of particles) {
+      p.update();
+      p.draw();
+    }
+    requestAnimationFrame(animate);
+  }
+
+  // adapt particle count based on viewport size (less on small screens)
+  function adaptAndStart() {
+    const area = window.innerWidth * window.innerHeight;
+    // baseline: 120 for typical desktop; scale linearly with area
+    const baselineArea = 1366 * 768;
+    let count = Math.round(120 * (area / baselineArea));
+    count = Math.max(40, Math.min(220, count)); // clamp
+    initParticles(count);
+    if (!window._particleAnimating) {
+      window._particleAnimating = true;
+      animate();
+    }
+  }
+
+  // start
+  adaptAndStart();
+  window.addEventListener('resize', () => {
+    resizeCanvas();
+    adaptAndStart();
+  });
+
+  // optional: pause particles when tab hidden to save CPU
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      window._particleAnimating = false;
+    } else {
+      if (!window._particleAnimating) {
+        window._particleAnimating = true;
+        animate();
+      }
+    }
+  });
+</script>
+<style>
+/* Hiệu ứng chạm ripple */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: rippleAnim 0.6s ease-out;
+  background: rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+@keyframes rippleAnim {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+</style>
+
+<script>
+// Hiệu ứng ripple toàn màn hình
+document.addEventListener("click", function(e) {
+  const ripple = document.createElement("span");
+  ripple.className = "ripple";
+  ripple.style.left = (e.clientX - 50) + "px";
+  ripple.style.top = (e.clientY - 50) + "px";
+  ripple.style.width = "100px";
+  ripple.style.height = "100px";
+
+  document.body.appendChild(ripple);
+
+  setTimeout(() => {
+    ripple.remove();
+  }, 600);
+});
+</script>
+</body>
+</html>
